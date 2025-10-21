@@ -1,0 +1,38 @@
+steps:
+  # 1️⃣ Build Docker image from your repo
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      [
+        'build',
+        '-t',
+        'asia-south1-docker.pkg.dev/valiant-sanctum-473314-m4/docker-repo/spotify-clone:latest',
+        '.'
+      ]
+
+
+  # 2️⃣ Push image to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      [
+        'push',
+        'asia-south1-docker.pkg.dev/valiant-sanctum-473314-m4/docker-repo/spotify-clone:latest'
+      ]
+
+  # 3️⃣ SSH into your VM and deploy the container
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        gcloud compute ssh ubuntu@docker-machine --zone=asia-south1 --command="
+          sudo docker pull asia-south1-docker.pkg.dev/valiant-sanctum-473314-m4/docker-repo/spotify-clone:latest &&
+          sudo docker stop spotify || true &&
+          sudo docker rm spotify || true &&
+          sudo docker run -d -p 80:80 --name spotify asia-south1-docker.pkg.dev/valiant-sanctum-473314-m4/docker-repo/spotify-clone:latest
+        "
+
+# (Optional) Substitute variables if you prefer
+substitutions:
+  _VM_NAME: docker-machine
+  _ZONE: asia-south1
+  _VM_USER: ubuntu
