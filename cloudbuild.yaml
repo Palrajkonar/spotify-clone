@@ -27,7 +27,7 @@ steps:
     args:
       - '-c'
       - |
-        gcloud compute ssh ubuntu@docker-machine --zone=asia-south1 --command="
+        gcloud compute ssh ubuntu@docker-machine --zone=asia-south1-a --command="
           sudo docker pull asia-south1-docker.pkg.dev/valiant-sanctum-473314-m4/docker-repo/spotify-clone:latest &&
           sudo docker stop spotify || true &&
           sudo docker rm spotify || true &&
