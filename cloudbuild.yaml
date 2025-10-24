@@ -1,3 +1,6 @@
+ options:
+  logging: CLOUD_LOGGING_ONLY
+
 steps:
   # 1️⃣ Build Docker image from your repo
   - name: 'gcr.io/cloud-builders/docker'
@@ -30,8 +33,7 @@ steps:
           sudo docker rm spotify || true &&
           sudo docker run -d -p 80:80 --name spotify asia-south1-docker.pkg.dev/valiant-sanctum-473314-m4/docker-repo/spotify-clone:latest
         "
-  options:
-  logging: CLOUD_LOGGING_ONLY
+ 
 # (Optional) Substitute variables if you prefer
 substitutions:
   _VM_NAME: docker-machine
